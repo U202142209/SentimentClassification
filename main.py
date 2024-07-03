@@ -11,6 +11,7 @@
   '''
 
 import os
+from datetime import datetime
 
 # 配置请求代理
 os.environ["http_proxy"] = "http://127.0.0.1:7890"
@@ -29,8 +30,19 @@ tokenizer = BertTokenizer.from_pretrained('IDEA-CCNL/Erlangshen-Roberta-110M-Sen
 model = BertForSequenceClassification.from_pretrained('IDEA-CCNL/Erlangshen-Roberta-110M-Sentiment')
 
 
+def getCurrentTime():
+    # 获取当前时间
+    now = datetime.now()
+    # 格式化时间字符串
+    formatted_time = now.strftime("%Y %m-%d %H:%M:%S")
+    return formatted_time
+
+
 # 定义预测函数
 def predict_sentiment(text):
+    # 将text写入文件中保存
+    with open("user_input_texts.txt", mode="a", encoding="utf-8") as f:
+        f.write(getCurrentTime() + " : " + text + "\n")
     # 编码文本
     inputs = tokenizer.encode(text, return_tensors="pt")
     # 获取模型输出
